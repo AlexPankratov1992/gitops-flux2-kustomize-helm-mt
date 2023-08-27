@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notesapp
+  namespace: notesapp
+  labels:
+    app: notesapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notesapp
+  template:
+    metadata:
+      labels:
+        app: notesapp
+    spec:
+      containers:
+      - name: notesapp
+        image: docker.io/idle19920116/notesapp:latest
+        env:
+        - name: MONGODB_URI
+          value: mongodb://mongo-0.mongodb,mongo-1.mongodb:27017/OwlEyeSystem?replicaSet=rs0
+        ports:
+        - containerPort: 4000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 250m
+            memory: 1024Mi
