@@ -3,4 +3,4 @@ kind: Kustomization
 resources:
   - ../base
 patchesStrategicMerge:
-  - notesapp-values.yaml
+  - ingress-patch.yaml

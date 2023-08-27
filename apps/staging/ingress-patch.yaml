@@ -1,0 +1,9 @@
+kind: Ingress
+metadata:
+  name: notesapp-ingress
+spec:
+  tls:
+  - hosts:
+    - staging.notesapp.d9bcc6aece5445d2bb67.eastus.aksapp.io
+  rules:
+    - host: staging.notesapp.d9bcc6aece5445d2bb67.eastus.aksapp.io
