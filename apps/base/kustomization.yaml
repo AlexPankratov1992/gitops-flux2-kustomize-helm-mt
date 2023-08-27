@@ -4,3 +4,5 @@ resources:
   - notesapp.yaml
   - ingress.yaml
   - namespace.yaml
+  - image-repository.yaml
+  - image-policy.yaml

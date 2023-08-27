@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: notesapp
-        image: docker.io/idle19920116/notesapp:latest
+        image: docker.io/idle19920116/notesapp:1 # {"$imagepolicy": "pass:notesapp-repo-policy"}
         env:
         - name: MONGODB_URI
           value: mongodb://mongo-0.mongodb,mongo-1.mongodb:27017/OwlEyeSystem?replicaSet=rs0
