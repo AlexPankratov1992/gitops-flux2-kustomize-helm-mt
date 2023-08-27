@@ -4,8 +4,8 @@ metadata:
   name: notesapp-ingress
   namespace: default
 spec:
-  tls:
-  - hosts:
+  tls[0]:
+    hosts:
     - staging.notesapp.d9bcc6aece5445d2bb67.eastus.aksapp.io
-  rules:
-    - host: staging.notesapp.d9bcc6aece5445d2bb67.eastus.aksapp.io
+  rules[0]:
+    host: staging.notesapp.d9bcc6aece5445d2bb67.eastus.aksapp.io
