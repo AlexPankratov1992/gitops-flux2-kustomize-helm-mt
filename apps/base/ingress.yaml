@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: notesapp-ingress
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    cert-manager.io/issue-temporary-certificate: "true"
+    acme.cert-manager.io/http01-edit-in-place: "true"
+spec:
+  tls:
+  - hosts:
+    - notesapp.d9bcc6aece5445d2bb67.eastus.aksapp.io
+    secretName: tls-secret
+  rules:
+  - host: notesapp.d9bcc6aece5445d2bb67.eastus.aksapp.io
+    http: 
+        paths: 
+        - backend:
+            service:
+              name: notesapp-service
+              port: 
+                  number: 4000
+          path: /
+          pathType: Prefix 
