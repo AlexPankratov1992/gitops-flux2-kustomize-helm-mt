@@ -2,7 +2,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
   name: oes-gitrepo
-  namespace: flux-system
+  namespace: oesgitops-config
 spec:
   interval: 1m0s
   timeout: 3m0s

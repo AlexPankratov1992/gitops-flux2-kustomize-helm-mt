@@ -2,12 +2,12 @@ apiVersion: image.toolkit.fluxcd.io/v1beta1
 kind: ImageUpdateAutomation
 metadata:
   name: imageautomation
-  namespace: flux-system
+  namespace: oesgitops-config
 spec:
   interval: 1m
   sourceRef:
     kind: GitRepository
-    name: oes-gitrepo
+    name: oesdevfluxconfig
   git:
     checkout:
       ref:
