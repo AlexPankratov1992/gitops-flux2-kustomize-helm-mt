@@ -7,4 +7,5 @@ spec:
   imageRepositoryRef:
     name: notesapp-repo
   policy:
-    numerical: {}
+    semver:
+      range: ">=1.0.0, <20.0.0"  # Define your Semver range here
