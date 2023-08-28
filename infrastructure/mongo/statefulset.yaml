@@ -1,0 +1,114 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: oes-sc
+  namespace: notesapp
+provisioner: disk.csi.azure.com
+parameters:
+  skuName: Premium_LRS
+  location: eastus
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pod-reader
+  namespace: notesapp
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: read-pods-rolebinding
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: notesapp
+roleRef:
+  kind: ClusterRole
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: notesapp
+  annotations:
+    service.beta.kubernetes.io/azure-dns-label-name: oesmongo
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 27017
+      targetPort: 27017
+  selector:
+    app: mongo
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+  namespace: notesapp
+spec:
+  selector:
+    matchLabels:
+      app: mongo
+  serviceName: mongodb
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      terminationGracePeriodSeconds: 20
+      containers:
+        - name: mongo
+          image: oesdevregistry.azurecr.io/mongo:5.0.15
+          command:
+            - mongod
+            - "--bind_ip_all"
+            - "--replSet"
+            - rs0
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo-volume
+              mountPath: /data/db
+        - name: mongo-sidecar
+          image: oesdevregistry.azurecr.io/mongo-k8s-sidecar:latest
+          env:
+            - name: MONGO_SIDECAR_POD_LABELS
+              value: "app=mongo"
+            - name: KUBERNETES_MONGO_SERVICE_NAME
+              value: "mongodb"
+            - name: MONGO_PORT
+              value: "27017"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - mongo
+                - oes
+            topologyKey: "kubernetes.io/hostname"
+      # volumes:
+      #   - name: mongo-volume
+      #     persistentVolumeClaim:
+      #       claimName: mongo-pvc
+  volumeClaimTemplates:
+  - metadata:
+      name: mongo-volume
+    spec:
+      storageClassName: oes-sc
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 32Gi
