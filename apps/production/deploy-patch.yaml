@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notesapp
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: notesapp
+  template:
+    spec:
+      containers:
+      - name: notesapp
+        env:
+        - name: BACKEND_API
+          value: "https://notesapp.d9bcc6aece5445d2bb67.eastus.aksapp.io/api"
