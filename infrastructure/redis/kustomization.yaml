@@ -5,7 +5,7 @@ resources:
   - namespace.yaml
 configMapGenerator:
   - name: redis-values
-    namespace: oesdevops-config
+    namespace: oesgitops-config
     files:
       - values.yaml=values.yaml
 configurations:
