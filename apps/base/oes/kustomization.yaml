@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - flux-config-gitrepo.yaml
+  - image-policy.yaml
+  - image-repository.yaml
+  - image-update.yaml
+  - ingress.yaml
+  - namespace.yaml
+  - notesapp.yaml
