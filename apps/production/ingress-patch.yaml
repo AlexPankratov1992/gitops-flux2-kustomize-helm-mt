@@ -7,5 +7,15 @@ spec:
   tls:
   - hosts:
     - notesapp.d9bcc6aece5445d2bb67.eastus.aksapp.io
+    secretName: tls-secret
   rules:
-    - host: notesapp.d9bcc6aece5445d2bb67.eastus.aksapp.io
+  - host: notesapp.d9bcc6aece5445d2bb67.eastus.aksapp.io
+    http: 
+        paths: 
+        - backend:
+            service:
+              name: notesapp-service
+              port: 
+                  number: 4000
+          path: /
+          pathType: Prefix 
